@@ -10,10 +10,10 @@ Browser (Next.js client components)
    ▼
 Next.js App Router (server components + API routes)
    │                  │                │
-   ├── Prisma ORM ────┴── JWT auth ────┴── storage/payment/email abstractions
+   ├── data store ────┴── JWT auth ────┴── storage/payment/email abstractions
    │
    ▼
-SQLite / PostgreSQL           uploads/      SMTP        Payment provider
+(in-memory data)           uploads/      SMTP        Payment provider
 ```
 
 - **Rendering**: Server Components for data-heavy public pages; Client Components ("use client") for interactive forms/dashboards.
@@ -39,7 +39,8 @@ SQLite / PostgreSQL           uploads/      SMTP        Payment provider
 - RBAC helpers: `isAdmin`, `isSuperAdmin`, `canPublish`.
 
 ### `src/lib/db.ts`
-- Singleton PrismaClient export (`db`).
+- In-memory data store exposing the same `db.<model>.<method>()` surface the app uses. No database, no connection string — data is seeded with demo content at module load and resets on restart/redeploy.
+- Types/enums live in `src/lib/db-types.ts` (mirrors the former Prisma schema).
 
 ### `src/lib/payment.ts`
 - `PaymentProvider` interface; `MockPaymentProvider` for dev.
@@ -78,7 +79,7 @@ SQLite / PostgreSQL           uploads/      SMTP        Payment provider
 
 ## Admin Hierarchy
 
-`AdminRole` on `User`: SUPER_ADMIN, USER_MANAGER, CONTENT_MODERATOR, PAYMENT_MANAGER, VERIFICATION_MANAGER, SUPPORT_ADMIN. The panel UI checks these for feature gating; API routes enforce `role === "ADMIN"` server-side. Role assignment → ADMIN is only possible via `npm run create-admin` or Super-Admin invitations.
+`AdminRole` on `User`: SUPER_ADMIN, USER_MANAGER, CONTENT_MODERATOR, PAYMENT_MANAGER, VERIFICATION_MANAGER, SUPPORT_ADMIN. The panel UI checks these for feature gating; API routes enforce `role === "ADMIN"` server-side. Role assignment → ADMIN is only possible via the seeded Super Admin or Super-Admin invitations.
 
 ## Security Architecture
 
@@ -86,5 +87,5 @@ See [SECURITY.md](SECURITY.md) for the detailed threat model.
 
 ## Deployment Topology
 
-- Single Node process (Next.js) + one DB + local uploads directory.
-- Scale path: Postgres + object storage (S3/R2) + serverless Next.js.
+- Single Node process (Next.js) + in-memory data + local uploads directory.
+- Scale path: swap the in-memory store in `src/lib/db.ts` for a real DB (e.g. Postgres) + object storage (S3/R2) + serverless Next.js. The store deliberately mirrors the Prisma query API so this swap is localized.

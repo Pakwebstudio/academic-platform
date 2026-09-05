@@ -7,23 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "db:migrate": "prisma migrate dev",
-    "db:push": "prisma db push",
-    "db:seed": "prisma db seed",
-    "db:studio": "prisma studio",
-    "create-admin": "node scripts/create-admin.js",
     "test": "vitest run --config vitest.config.ts",
     "test:unit": "vitest run --config vitest.config.ts",
     "test:watch": "vitest watch --config vitest.config.ts",
-    "test:integration": "vitest run --config vitest.integration.config.ts",
-    "postinstall": "prisma skills sync || exit 0"
-  },
-  "prisma": {
-    "seed": "node prisma/seed.js"
+    "test:integration": "vitest run --config vitest.integration.config.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
-    "@prisma/client": "^6.19.3",
     "@types/jsonwebtoken": "^9.0.10",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
@@ -33,7 +23,6 @@
     "lucide-react": "^1.38.0",
     "next": "16.3.4",
     "nodemailer": "^9.1.0",
-    "prisma": "^6.19.3",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-hook-form": "^7.87.0",

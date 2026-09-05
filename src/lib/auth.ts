@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { db } from "@/lib/db";
-import type { Role, User } from "@prisma/client";
+import type { Role, User } from "@/lib/db-types";
 import { cache } from "react";
 
 const AUTH_SECRET = process.env.AUTH_SECRET || "dev-secret-change-me";
@@ -55,7 +55,7 @@ export const getCurrentUser = cache(async (): Promise<User | null> => {
     const user = await db.user.findUnique({
       where: { id: payload.userId },
     });
-    return user;
+    return user as User | null;
   } catch {
     return null;
   }

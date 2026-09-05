@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/cn";
 import { Avatar } from "./avatar";
 import { DropdownMenu } from "./dropdown-menu";
-import type { Role } from "@prisma/client";
+import type { Role } from "@/lib/db-types";
 
 type CurrentUser = {
   id: string;

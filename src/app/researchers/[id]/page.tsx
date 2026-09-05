@@ -5,6 +5,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import type { DbRow } from "@/lib/db-types";
 
 export default async function ResearcherDetailPage({
   params,
@@ -39,7 +40,7 @@ export default async function ResearcherDetailPage({
 
   if (!user) notFound();
 
-  const interests = user.researchInterests.map((ri) => ri.researchArea.name);
+  const interests = user.researchInterests.map((ri: DbRow) => ri.researchArea.name);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
@@ -105,7 +106,7 @@ export default async function ResearcherDetailPage({
             <Card className="p-6">
               <h2 className="text-lg font-semibold text-slate-900 mb-3">Research Interests</h2>
               <div className="flex flex-wrap gap-2">
-                {interests.map((i) => (
+                {interests.map((i: string) => (
                   <Badge key={i} variant="primary">{i}</Badge>
                 ))}
               </div>
@@ -117,7 +118,7 @@ export default async function ResearcherDetailPage({
             <Card className="p-6">
               <h2 className="text-lg font-semibold text-slate-900 mb-4">Publications</h2>
               <div className="space-y-4">
-                {user.papers.map((paper) => (
+                {user.papers.map((paper: DbRow) => (
                   <Link key={paper.id} href={`/papers/${paper.slug}`} className="block p-3 rounded-lg hover:bg-slate-50 transition-colors">
                     <h3 className="font-medium text-slate-900 hover:text-primary">{paper.title}</h3>
                     <p className="text-sm text-slate-500 mt-1 line-clamp-2">{paper.abstract}</p>
@@ -155,7 +156,7 @@ export default async function ResearcherDetailPage({
             <Card className="p-6">
               <h2 className="text-lg font-semibold text-slate-900 mb-3">Links</h2>
               <ul className="space-y-2 text-sm">
-                {user.socialLinks.map((link) => (
+                {user.socialLinks.map((link: DbRow) => (
                   <li key={link.id}>
                     <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
                       {link.platform}
@@ -171,7 +172,7 @@ export default async function ResearcherDetailPage({
             <Card className="p-6">
               <h2 className="text-lg font-semibold text-slate-900 mb-3">Education</h2>
               <div className="space-y-3">
-                {user.qualifications.map((q) => (
+                {user.qualifications.map((q: DbRow) => (
                   <div key={q.id}>
                     <p className="text-sm font-medium text-slate-900">{q.degree}</p>
                     <p className="text-sm text-slate-500">{q.university}{q.yearTo ? ` (${q.yearFrom}–${q.yearTo})` : ""}</p>
@@ -186,7 +187,7 @@ export default async function ResearcherDetailPage({
             <Card className="p-6">
               <h2 className="text-lg font-semibold text-slate-900 mb-3">Experience</h2>
               <div className="space-y-3">
-                {user.experiences.map((e) => (
+                {user.experiences.map((e: DbRow) => (
                   <div key={e.id}>
                     <p className="text-sm font-medium text-slate-900">{e.role}</p>
                     <p className="text-sm text-slate-500">{e.organization}{e.endYear ? ` (${e.startYear}–${e.current ? "Present" : e.endYear})` : ""}</p>

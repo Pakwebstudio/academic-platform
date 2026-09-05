@@ -1,11 +1,13 @@
-# DATABASE
+# DATA MODEL
 
-Data model for Acadexa (Prisma schema: `prisma/schema.prisma`).
+Acadexa runs **without a database**. Types and enums are defined in `src/lib/db-types.ts`; `src/lib/db.ts` implements an in-memory store that mirrors the Prisma query API and seeds demo data at startup.
 
-## Providers
+## Storage
 
-- **Development / single-node**: SQLite (`file:./dev.db`)
-- **Production / multi-instance**: PostgreSQL (`DATABASE_URL`)
+- All data lives in process memory (`src/lib/db.ts`). It is seeded automatically on module load (7 users, 8 universities, 6 departments, 20 research areas, 11 papers, sample purchases/collaborations, etc.).
+- Every deploy / server restart resets data to the seed — treat it as a demo data layer, not durable storage.
+- Uploaded paper files are kept on disk (see `STORAGE_PATH`) and are the only persisted user data.
+- No connection string, no migrations, no client engine.
 
 ## Enums
 
@@ -78,15 +80,11 @@ Relations: uploader, category, university, `authors` (PaperAuthor), researchArea
 
 ## Migrations
 
-Migration history lives in `prisma/migrations/`. Apply with:
-
-```bash
-npm run db:migrate     # dev (creates + applies new migration)
-# production: npx prisma migrate deploy
-```
+No migrations exist — there is no database. The model is defined once in `src/lib/db-types.ts` and the seed lives in `src/lib/db.ts`.
 
 ## Notes
 
 - JS keywords (e.g. `model`/`category`) are not used as field names in feeds; `request` variable naming inside route handlers avoids shadowing the request param (Turbopack build error).
-- Prisma 6 requires 1:1 relations to only declare FK fields on one side; `Payment` owns the `purchaseId @unique`, `PaperPurchase.payment` is the back-relation.
-- M2M relations use explicit join models (UniversityDepartment, PaperResearchArea, UserResearchInterest) for future column expansion.
+- The in-memory store replicates the Prisma 6 query surface (relations, `include`/`select`/`_count`, operators, atomic updates, nested creates) so callers did not change.
+- The store persists a previous 1:1 FK convention: the record owning the FK field is marked explicitly (`on: "this" | "to"` in the relation map in `src/lib/db.ts`).
+- If real persistence is needed later, replace the `db` implementation with an actual Prisma client; relation + enum names above map 1:1 to a Prisma schema.

@@ -3,7 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { success, error, forbidden } from "@/lib/api";
 import { auditLog } from "@/lib/audit";
-import type { Prisma } from "@prisma/client";
+import type { Prisma } from "@/lib/db-types";
 
 export async function GET(request: NextRequest) {
   const viewer = await getCurrentUser();

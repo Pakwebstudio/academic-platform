@@ -18,10 +18,11 @@ async function reachable(): Promise<boolean> {
 
 async function startServer(): Promise<void> {
   const { spawn } = await import("node:child_process");
+  const cwd = process.cwd();
   // Spawn node directly against Next's JS CLI to avoid Windows .cmd shim issues.
-  const nextBin = "D:\\acadexa\\node_modules\\next\\dist\\bin\\next";
+  const nextBin = `${cwd}\\node_modules\\next\\dist\\bin\\next`;
   server = spawn(process.execPath, [nextBin, "start", "-p", "3200"], {
-    cwd: "D:\\acadexa",
+    cwd,
     env: { ...process.env, PORT: undefined },
     stdio: "ignore",
   });

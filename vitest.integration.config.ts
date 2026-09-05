@@ -11,8 +11,5 @@ export default defineConfig({
     environment: "node",
     include: ["tests/integration/**/*.test.ts"],
     testTimeout: 20000,
-    env: {
-      DATABASE_URL: "file:./dev.db",
-    },
   },
 });

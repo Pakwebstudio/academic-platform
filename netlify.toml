@@ -2,7 +2,7 @@
 # Uses Netlify's official Next.js runtime plugin to run SSR + API routes.
 
 [build]
-  command = "npx prisma generate && npm run build"
+  command = "npm run build"
   publish = ".next"
 
 [[plugins]]

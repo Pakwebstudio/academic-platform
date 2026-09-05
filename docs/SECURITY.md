@@ -5,7 +5,7 @@ Threat model and security controls for Acadexa.
 ## Principles
 
 1. **Server-side authorization everywhere.** Every API route re-checks the session and role — never trust the client.
-2. **No public admin creation.** Registration accepts only STUDENT / TEACHER / RESEARCHER. ADMIN accounts are created via the `create-admin` CLI or one-time Super-Admin invitations.
+2. **No public admin creation.** Registration accepts only STUDENT / TEACHER / RESEARCHER. ADMIN accounts come from the seeded Super Admin or one-time Super-Admin invitations.
 3. **Private file serving.** Paper files live outside `public/` and are streamed only through an authorized route.
 4. **Layered defenses.** RBAC + cookie security + input validation + audit trail.
 

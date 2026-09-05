@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { Role } from "@prisma/client";
+import type { Role } from "@/lib/db-types";
 
 const roleCards: { role: Role; title: string; desc: string; icon: string }[] = [
   { role: "STUDENT", title: "Student", desc: "Discover research papers, find researchers, and access academic resources.", icon: "📚" },

@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { Badge } from "@/components/ui/badge";
 import { PaperCard } from "@/components/ui/paper-card";
 import { ResearcherCard } from "@/components/ui/researcher-card";
+import type { DbRow } from "@/lib/db-types";
 
 export default async function UniversityDetailPage({
   params,
@@ -73,7 +74,7 @@ export default async function UniversityDetailPage({
         <section className="mb-12">
           <h2 className="text-xl font-bold text-slate-900 mb-4">Faculty & Researchers</h2>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {university.researchers.map((rp) => (
+            {university.researchers.map((rp: DbRow) => (
               <ResearcherCard key={rp.user.id} researcher={rp.user} />
             ))}
           </div>
@@ -85,7 +86,9 @@ export default async function UniversityDetailPage({
         <section>
           <h2 className="text-xl font-bold text-slate-900 mb-4">Recent Publications</h2>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {university.papers.map((p) => (
+            {university.papers.map(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (p: any) => (
               <PaperCard key={p.id} paper={p} />
             ))}
           </div>

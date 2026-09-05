@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import type { DbRow } from "@/lib/db-types";
 
 export default async function PaperReaderPage({
   params,
@@ -26,10 +27,10 @@ export default async function PaperReaderPage({
 
   // Determine access
   const hasAccessRecord = paper.accessRecords.some(
-    (rec) => rec.userId === user.id && !rec.revokedAt
+    (rec: DbRow) => rec.userId === user.id && !rec.revokedAt
   );
   const isUploader = paper.uploaderId === user.id;
-  const isAuthor = paper.authors.some((a) => a.userId === user.id);
+  const isAuthor = paper.authors.some((a: DbRow) => a.userId === user.id);
   const isFree = paper.accessType === "FREE";
   const hasAccess = isFree || hasAccessRecord || isUploader || isAuthor;
 

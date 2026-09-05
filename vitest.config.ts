@@ -10,9 +10,6 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["tests/unit/**/*.test.ts"],
-    env: {
-      DATABASE_URL: "file:./dev.db",
-    },
     testTimeout: 10000,
   },
 });

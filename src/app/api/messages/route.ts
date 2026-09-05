@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { success, error } from "@/lib/api";
 import { createNotification } from "@/lib/notifications";
+import type { DbRow } from "@/lib/db-types";
 
 // List conversations for current user
 export async function GET() {
@@ -20,7 +21,7 @@ export async function GET() {
 
   return success({
     conversations: conversations.map((c) => {
-      const other = c.members.find((m) => m.userId !== user.id)?.user;
+      const other = c.members.find((m: DbRow) => m.userId !== user.id)?.user;
       const last = c.messages[0];
       return {
         id: c.id,

@@ -6,6 +6,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import { PurchaseButton } from "@/components/purchase-button";
+import type { DbRow } from "@/lib/db-types";
 
 export default async function PaperDetailPage({
   params,
@@ -62,12 +63,12 @@ export default async function PaperDetailPage({
         {paper.authors.length > 0 && (
           <div className="flex items-center gap-3 mb-6">
             <div className="flex -space-x-3">
-              {paper.authors.map((a, i) => (
+              {paper.authors.map((a: DbRow, i: number) => (
                 <Avatar key={i} src={a.user?.avatarUrl} name={a.name} size="sm" className="ring-2 ring-white" />
               ))}
             </div>
             <div className="text-sm text-slate-600">
-              {paper.authors.map((a, i) => (
+              {paper.authors.map((a: DbRow, i: number) => (
                 <span key={i}>
                   {a.user ? (
                     <Link href={`/researchers/${a.user.id}`} className="font-medium text-primary hover:underline">{a.name}</Link>
@@ -95,7 +96,7 @@ export default async function PaperDetailPage({
         {/* Research areas */}
         {paper.researchAreas.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-6">
-            {paper.researchAreas.map((ra) => (
+            {paper.researchAreas.map((ra: DbRow) => (
               <Link key={ra.researchArea.id} href={`/papers?area=${ra.researchArea.slug}`}>
                 <Badge variant="outline">{ra.researchArea.name}</Badge>
               </Link>

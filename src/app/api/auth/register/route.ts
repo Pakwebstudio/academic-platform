@@ -5,7 +5,7 @@ import { signSessionToken, setSessionCookie } from "@/lib/auth";
 import { success, error, validate } from "@/lib/api";
 import { emailService } from "@/lib/email";
 import { auditLog } from "@/lib/audit";
-import type { Role } from "@prisma/client";
+import type { Role } from "@/lib/db-types";
 
 export async function POST(request: NextRequest) {
   try {

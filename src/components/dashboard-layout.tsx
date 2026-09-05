@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/cn";
 import { Avatar } from "@/components/ui/avatar";
-import type { Role } from "@prisma/client";
+import type { Role } from "@/lib/db-types";
 
 const dashboardLinks: { href: string; label: string; icon: string }[] = [
   { href: "/dashboard", label: "Overview", icon: "📊" },

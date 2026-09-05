@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { success, error, forbidden, notFound } from "@/lib/api";
 import { createNotification } from "@/lib/notifications";
+import type { DbRow } from "@/lib/db-types";
 
 export async function GET(
   _request: NextRequest,
@@ -21,7 +22,7 @@ export async function GET(
   });
 
   if (!conversation) return notFound("Conversation not found");
-  if (!conversation.members.some((m) => m.userId === user.id))
+  if (!conversation.members.some((m: DbRow) => m.userId === user.id))
     return forbidden("Not a participant");
 
   return success({ conversation });
@@ -40,7 +41,7 @@ export async function POST(
     include: { members: true },
   });
   if (!conversation) return notFound("Conversation not found");
-  if (!conversation.members.some((m) => m.userId === user.id))
+  if (!conversation.members.some((m: DbRow) => m.userId === user.id))
     return forbidden("Not a participant");
 
   const body = await request.json();
@@ -56,7 +57,7 @@ export async function POST(
     data: { updatedAt: new Date(), lastMessageAt: new Date() },
   });
 
-  const recipient = conversation.members.find((m) => m.userId !== user.id);
+  const recipient = conversation.members.find((m: DbRow) => m.userId !== user.id);
   if (recipient) {
     await createNotification({
       userId: recipient.userId,

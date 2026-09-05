@@ -1,7 +1,7 @@
 import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { success, error, forbidden } from "@/lib/api";
-import type { CollaborationStatus } from "@prisma/client";
+import type { CollaborationStatus } from "@/lib/db-types";
 
 export async function GET(request: Request) {
   const viewer = await getCurrentUser();

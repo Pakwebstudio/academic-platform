@@ -1,8 +1,8 @@
 # Acadexa — Academic Research & Professional Platform
 
-Acadexa is a full-stack academic research platform built with **Next.js 16 (App Router)**, **TypeScript**, **Tailwind CSS v4**, **Prisma + SQLite/PostgreSQL**, and **JWT cookie-based auth**. It connects researchers, educators, students, and universities for publishing, discovering, and securely exchanging academic research.
+Acadexa is a full-stack academic research platform built with **Next.js 16 (App Router)**, **TypeScript**, **Tailwind CSS v4**, and **JWT cookie-based auth**. It connects researchers, educators, students, and universities for publishing, discovering, and securely exchanging academic research. Data runs on an in-memory store (no database) seeded with demo content at startup.
 
-> **⚠️ IMPORTANT — Project location:** This project lives in **`D:\acadexa`**, NOT the original `D:\ACADEMIC RESEARCH & PROFESSIONAL PLATFORM` folder. The original path contains spaces and an `&`, which breaks every CLI tool (npm, prisma, next). The code was relocated to a clean path. All commands below assume `D:\acadexa`.
+> **⚠️ IMPORTANT — Project location:** This project lives in **`D:\academic-platform`**. It was relocated from `D:\ACADEMIC RESEARCH & PROFESSIONAL PLATFORM`, whose spaces and `&` break CLI tools on Windows. Keep the project on a clean path.
 
 ---
 
@@ -54,7 +54,7 @@ Acadexa is a full-stack academic research platform built with **Next.js 16 (App 
 ### Security
 - Custom JWT sessions in httpOnly cookies (7-day TTL)
 - Role-based access control (RBAC) enforced **server-side** in every API route
-- No public admin registration; administrators are created only via `npm run create-admin` or Super-Admin invitations with one-time tokens/expiry
+- No public admin registration; administrators are created only by the seeded Super Admin or Super-Admin invitations with one-time tokens/expiry
 - Bcrypt password hashing (12 rounds)
 - Paper files stored outside `public/`, served only after server-side authorization
 - Audit logging for sensitive admin actions
@@ -70,7 +70,7 @@ Acadexa is a full-stack academic research platform built with **Next.js 16 (App 
 ### 1. Install
 
 ```bash
-cd D:\acadexa
+cd D:\academic-platform
 npm install
 ```
 
@@ -82,26 +82,11 @@ copy .env.example .env   # then edit values (see SETUP.md)
 
 At minimum, set a strong `AUTH_SECRET`.
 
-### 3. Migrate & seed
+### 3. Demo data (no database required)
 
-```bash
-npm run db:migrate        # applies prisma migrations (creates SQLite dev.db)
-npm run db:seed           # demo users, universities, research areas, papers
-```
+No DB setup is needed. The app stores data in an in-memory store (`src/lib/db.ts`) that seeds demo users, universities, research areas, and papers automatically on first load.
 
-If you prefer to skip migrations and sync directly to schema:
-
-```bash
-npm run db:push
-```
-
-### 4. Create an admin (no public signup)
-
-```bash
-npm run create-admin -- --name "Platform Admin" --email admin@example.com --password "StrongPass123!" --role SUPER_ADMIN
-```
-
-### 5. Run
+### 4. Run
 
 ```bash
 npm run dev
@@ -109,7 +94,7 @@ npm run dev
 
 Open http://localhost:3000
 
-### Demo accounts (after seeding)
+### Demo accounts (auto-seeded)
 
 | Role | Email | Password |
 |------|-------|----------|
@@ -129,11 +114,6 @@ Open http://localhost:3000
 | `npm run dev` | Start dev server |
 | `npm run build` | Production build (type checks) |
 | `npm start` | Start production server |
-| `npm run db:migrate` | Run Prisma migrations |
-| `npm run db:push` | Sync schema to DB (no migration) |
-| `npm run db:seed` | Seed demo data |
-| `npm run db:studio` | Open Prisma Studio |
-| `npm run create-admin` | Create an admin account via CLI |
 | `npm test` | Unit tests (Vitest) |
 | `npm run test:integration` | API integration tests (boots `next start`) |
 | `npm run lint` | ESLint |
@@ -141,7 +121,7 @@ Open http://localhost:3000
 ### Tests
 
 - **Unit tests** (`npm test`) cover password hashing/verification, input validation, paper file-type/policy checks, RBAC whitelist, and formatting/slug helpers. No server required.
-- **Integration tests** (`npm run test:integration`) boot a production server (`next start` on port 3200) and exercise the real APIs: login/session, admin RBAC (401/403), public endpoints, and the full **upload → publish → secure file access** flow. They create a temporary paper/file and clean them up. Requires a seeded DB (`npm run db:seed`).
+- **Integration tests** (`npm run test:integration`) boot a production server (`next start` on port 3200) and exercise the real APIs: login/session, admin RBAC (401/403), public endpoints, and the full **upload → publish → secure file access** flow. They create a temporary paper/file and clean them up.
 
 ---
 
@@ -160,7 +140,8 @@ src/
     admin-layout.tsx         # admin shell
   lib/
     auth.ts                  # JWT session helpers, RBAC
-    db.ts                    # Prisma client
+    db.ts                    # in-memory data store (no database)
+    db-types.ts              # data model types/enums
     api.ts                   # API response helpers
     payment.ts               # payment provider abstraction (mock)
     storage.ts               # private file storage abstraction
@@ -169,11 +150,6 @@ src/
     audit.ts                 # audit logging
     password.ts              # bcrypt hashing
     utils.ts                 # slugs, formatting, helpers
-prisma/
-  schema.prisma              # database schema
-  seed.js                    # demo data
-scripts/
-  create-admin.js            # CLI admin creation
 ```
 
 See `docs/` for deeper guides:
@@ -192,7 +168,7 @@ See `docs/` for deeper guides:
 - **Next.js 16.3** (App Router, `src/` dir, Turbopack)
 - **TypeScript**
 - **Tailwind CSS v4** (design system with `primary` indigo palette)
-- **Prisma 6** + SQLite (default) / Postgres (production)
+- **Database-free runtime** — in-memory store seeded with demo data (no DB setup)
 - **JWT auth** (jsonwebtoken) in httpOnly cookies
 - **bcryptjs**, **zod**, **react-hook-form**, **zustand**
 - **recharts** (admin charts), **lucide-react**, **date-fns**
@@ -205,5 +181,4 @@ See `docs/` for deeper guides:
 - **npm is very slow here** (~8 min for a full install). Run installs with `--no-audit --no-fund` and generous timeouts.
 - The **C: drive is nearly full**; the npm cache was relocated to `D:\npm-cache` (`npm config set cache "D:\npm-cache" --global`).
 - Invoke CLIs via full quoted paths from PowerShell:
-  `& "D:\acadexa\node_modules\.bin\next.cmd" build`
-  `& "D:\acadexa\node_modules\.bin\prisma.cmd" db seed`
+  `& "D:\academic-platform\node_modules\.bin\next.cmd" build`

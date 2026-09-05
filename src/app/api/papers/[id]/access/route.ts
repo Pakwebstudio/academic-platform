@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { error, notFound, forbidden } from "@/lib/api";
 import { storageService } from "@/lib/storage";
+import type { DbRow } from "@/lib/db-types";
 
 // Secure paper file access. Requires the requesting user to have an active PaperAccess record.
 export async function GET(
@@ -21,10 +22,10 @@ export async function GET(
 
   // Access rules: free papers with uploader authorization, or a purchased access record
   const hasAccessRecord = paper.accessRecords.some(
-    (rec) => rec.userId === user.id && !rec.revokedAt
+    (rec: DbRow) => rec.userId === user.id && !rec.revokedAt
   );
   const isUploader = paper.uploaderId === user.id;
-  const isAuthor = paper.authors?.some((a) => a.userId === user.id);
+  const isAuthor = paper.authors?.some((a: DbRow) => a.userId === user.id);
 
   const isFree = paper.accessType === "FREE" && paper.status === "APPROVED";
 

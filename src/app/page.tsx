@@ -125,7 +125,9 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {data.researchers.map((r) => (
+            {data.researchers.map(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (r: any) => (
               <ResearcherCard key={r.id} researcher={r} />
             ))}
           </div>
@@ -146,7 +148,9 @@ export default async function HomePage() {
               </Link>
             </div>
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {data.papers.map((p) => (
+              {data.papers.map(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (p: any) => (
                 <PaperCard key={p.id} paper={p} />
               ))}
             </div>

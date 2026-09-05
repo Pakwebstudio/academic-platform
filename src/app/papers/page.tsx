@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { PaperCard } from "@/components/ui/paper-card";
 import { Pagination } from "@/components/ui/pagination";
 import { EmptyState } from "@/components/ui/feedback";
-import type { Prisma } from "@prisma/client";
+import type { Prisma } from "@/lib/db-types";
 
 export default async function PapersPage({
   searchParams,
@@ -83,7 +83,9 @@ export default async function PapersPage({
         <>
           <div className="mb-4 text-sm text-slate-500">{total} paper{total !== 1 ? "s" : ""} found</div>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {papers.map((p) => {
+            {papers.map(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (p: any) => {
               const card = { ...p, researchField: p.researchAreas[0]?.researchArea.name };
               return (
                 <PaperCard

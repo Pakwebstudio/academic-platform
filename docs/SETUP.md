@@ -6,17 +6,17 @@ Detailed setup and deployment guide for Acadexa.
 
 - **Node.js ≥ 20** (tested on v24)
 - npm
-- (Production) a PostgreSQL instance, or keep SQLite for single-node deployments
+- No database is required (data lives in an in-memory store seeded with demo content)
 
 ## Local Development
 
 ### 1. Clone / extract the project
 
 ```bash
-cd "D:\acadexa"
+cd "D:\academic-platform"
 ```
 
-> ⚠️ Do NOT run this project from a path containing spaces or `&`. All CLI shims (npm, prisma, next) break on such paths on Windows.
+> ⚠️ Do NOT run this project from a path containing spaces or `&`. CLI shims (npm, next) break on such paths on Windows.
 
 ### 2. Install dependencies
 
@@ -37,7 +37,6 @@ Edit `.env`:
 
 | Variable | Description |
 |----------|-------------|
-| `DATABASE_URL` | `file:./dev.db` (SQLite) or a Postgres URL |
 | `AUTH_SECRET` | Strong random string — signs JWT sessions |
 | `APP_URL` | Base URL used in emails / checkout links |
 | `EMAIL_HOST` | Leave empty in dev (emails are console-logged) |
@@ -50,22 +49,13 @@ Generate an auth secret:
 node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 ```
 
-### 4. Database
+### 4. Data (no database)
 
-```bash
-npm run db:migrate   # applies migrations
-npm run db:seed      # demo data (see README for demo accounts)
-```
+There is no database. `src/lib/db.ts` seeds demo data (users, universities, research areas, papers) automatically when the app starts.
 
 ### 5. First administrator
 
-There is **no public admin registration**. Create the admin from the CLI:
-
-```bash
-npm run create-admin -- --name "Platform Admin" --email admin@example.com --password "StrongPass123!" --role SUPER_ADMIN
-```
-
-Or invite additional administrators from the admin panel (`/admin/settings`, Super Admin only).
+There is **no public admin registration**. A Super Admin is seeded at `admin@acadexa.com` (password `Password123!`). Additional administrators can be invited from the admin panel (`/admin/settings`, Super Admin only).
 
 ### 6. Run
 
@@ -92,14 +82,12 @@ Open http://localhost:3000
 
 ## Production Deployment
 
-### Vercel
+### Netlify
 
-1. Connect the git repo to Vercel.
-2. Add the `.env` variables in Project Settings → Environment Variables.
-3. For SQLite on Vercel, use a serverless-friendly provider or switch to Postgres:
-   `DATABASE_URL="postgresql://USER:PASS@HOST:5432/DB?schema=public"`
-4. Run migrations as a pre-deploy step (`npm run db:migrate` breaks in serverless — use `prisma migrate deploy` from a CI job).
-5. Set `STORAGE_PROVIDER` to a cloud provider (S3/R2) for persistent file storage; the abstraction in `src/lib/storage.ts` is ready to extend.
+1. Push the repo to GitHub and connect it to Netlify.
+2. Add the `.env` variables in Site Settings → Environment Variables (there is **no database** to provision).
+3. `netlify.toml` builds with the official Next.js runtime plugin (`npm run build`).
+4. Set `STORAGE_PROVIDER` to a cloud provider (S3/R2) if you need persistent paper file storage across deploys; the abstraction in `src/lib/storage.ts` is ready to extend.
 
 ### Self-hosted (Docker / VPS)
 
@@ -111,15 +99,13 @@ Open http://localhost:3000
 
 ### Backup
 
-- SQLite: back up `prisma/dev.db` and the `uploads/` directory.
-- Postgres: standard `pg_dump` + backup your storage bucket.
+- Uploaded paper files: back up the `uploads/` directory (`STORAGE_PATH`). All other data is re-derived from the in-memory seed on restart.
 
 ## Troubleshooting
 
 | Symptom | Fix |
 |---------|-----|
 | "Module not found: jsonwebtoken" | `npm install jsonwebtoken @types/jsonwebtoken` |
-| Prisma client stale after schema change | `npm run db:migrate` (regenerates client) |
-| Build fails on paths with spaces/`&` | Relocate project to a clean path (e.g. `D:\acadexa`) |
+| Build fails on paths with spaces/`&` | Relocate project to a clean path (e.g. `D:\academic-platform`) |
 | Emails not arriving | Verify `EMAIL_HOST`/`EMAIL_USER`/`EMAIL_PASS`; dev mode logs to console |
 | Mock payment "session not found" | Ensure `APP_URL` matches the browser URL (localhost:3000) |

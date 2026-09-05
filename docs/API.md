@@ -123,4 +123,4 @@ All API routes are Next.js Route Handlers under `src/app/api/**`. Responses are 
 - Every mutation validates the session and role server-side.
 - Admin routes always check `viewer.role !== "ADMIN"` → 403.
 - Role changes to ADMIN are never accepted from the client: blocked in the users route (`changeRole` restrictor) and registration.
-- `create-admin` CLI and `/admin/accept-invite` are the only paths to create administrators.
+- A seeded Super Admin (`admin@acadexa.com`) and `/admin/accept-invite` are the only paths to create administrators.

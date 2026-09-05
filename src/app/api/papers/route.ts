@@ -4,7 +4,7 @@ import { canPublish } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { success, error, forbidden } from "@/lib/api";
 import { slugify } from "@/lib/utils";
-import type { PaperStatus, Prisma } from "@prisma/client";
+import type { PaperStatus, Prisma } from "@/lib/db-types";
 
 export async function POST(request: NextRequest) {
   const user = await getCurrentUser();

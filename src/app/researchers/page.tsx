@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { ResearcherCard } from "@/components/ui/researcher-card";
 import { EmptyState } from "@/components/ui/feedback";
 import { Pagination } from "@/components/ui/pagination";
-import type { Prisma } from "@prisma/client";
+import type { Prisma } from "@/lib/db-types";
 
 export default async function ResearchersPage({
   searchParams,
@@ -66,7 +66,9 @@ export default async function ResearchersPage({
         <>
           <p className="mb-4 text-sm text-slate-500">{total} researcher{total !== 1 ? "s" : ""}</p>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {researchers.map((r) => (
+            {researchers.map(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (r: any) => (
               <ResearcherCard key={r.id} researcher={r} />
             ))}
           </div>

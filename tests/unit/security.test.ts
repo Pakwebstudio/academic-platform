@@ -6,7 +6,7 @@ import {
   ALLOWED_IMAGE_TYPES,
   MAX_PAPER_SIZE,
 } from "@/lib/storage";
-import type { Role } from "@prisma/client";
+import type { Role } from "@/lib/db-types";
 
 describe("input validation", () => {
   it("validates email addresses", () => {
