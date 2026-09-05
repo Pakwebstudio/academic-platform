@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Node scripts are intentionally CommonJS (executed directly via `node`),
+    // so `require()` is the correct module system for them.
+    "prisma/seed.js",
+    "scripts/create-admin.js",
   ]),
 ]);
 

@@ -30,11 +30,17 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files — never commit real secrets (example file is safe to keep)
 .env*
+!.env.example
 
 # vercel
 .vercel
+
+# runtime data — regenerate via prisma migrate/seed
+/uploads/
+/prisma/dev.db
+/prisma/dev.db-journal
 
 # typescript
 *.tsbuildinfo
